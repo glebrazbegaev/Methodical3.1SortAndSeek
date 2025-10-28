@@ -1,23 +1,49 @@
 public class SelectionSort {
-    public static void selectionSort(int[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            int minIndex = i;
-            for (int j = i + 1; j < arr.length; j++) {
-                if (arr[j] < arr[minIndex]) {
-                    minIndex = j;
+    
+    // Реализация сортировки выбором
+    public static void sortBySelection(int[] numbers) {
+        // Проходим по всем позициям массива
+        for (int current = 0; current < numbers.length - 1; current++) {
+            // Считаем текущий элемент наименьшим
+            int minPosition = current;
+            
+            // Ищем минимальный элемент в оставшейся части
+            for (int next = current + 1; next < numbers.length; next++) {
+                // Если нашли элемент меньше текущего минимального
+                if (numbers[next] < numbers[minPosition]) {
+                    minPosition = next;
                 }
             }
-            int temp = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
+            
+            // Меняем местами минимальный элемент с текущим
+            int temporary = numbers[minPosition];
+            numbers[minPosition] = numbers[current];
+            numbers[current] = temporary;
         }
     }
     
-    public static void main(String[] args) {
-        int[] arr = {64, 25, 12, 22, 11};
-        selectionSort(arr);
-        for (int num : arr) {
-            System.out.print(num + " ");
+    // Метод для отображения массива
+    public static void displayArray(int[] numbers) {
+        for (int number : numbers) {
+            System.out.print(number + " ");
         }
+        System.out.println();
+    }
+    
+    // Основной метод программы
+    public static void main(String[] args) {
+        // Тестовый набор данных
+        int[] data = {64, 25, 12, 22, 11};
+        
+        // Показываем исходные данные
+        System.out.print("Массив до сортировки: ");
+        displayArray(data);
+        
+        // Выполняем сортировку
+        sortBySelection(data);
+        
+        // Показываем результат
+        System.out.print("Массив после сортировки: ");
+        displayArray(data);
     }
 }
