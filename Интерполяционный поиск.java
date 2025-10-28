@@ -1,34 +1,61 @@
 public class InterpolationSearch {
-    public static int interpolationSearch(int[] arr, int target) {
-        int low = 0, high = arr.length - 1;
-        
-        while (low <= high && target >= arr[low] && target <= arr[high]) {
-            if (low == high) {
-                if (arr[low] == target) return low;
-                return -1;
+    
+    // Поиск с интерполяцией (рекурсивный вариант)
+    public static int searchInterpolation(int[] array, int start, int end, int target) {
+        // Проверяем допустимость границ и наличие target в диапазоне
+        if (start <= end && target >= array[start] && target <= array[end]) {
+            
+            // Вычисляем предполагаемую позицию
+            int estimatedPos = start + ((target - array[start]) * (end - start)) 
+                             / (array[end] - array[start]);
+            
+            // Проверяем найденный элемент
+            if (array[estimatedPos] == target) {
+                return estimatedPos;
             }
             
-            int pos = low + (((high - low) * (target - arr[low])) / (arr[high] - arr[low]));
+            // Ищем в правой части если target больше
+            if (array[estimatedPos] < target) {
+                return searchInterpolation(array, estimatedPos + 1, end, target);
+            }
             
-            if (arr[pos] == target) {
-                return pos;
-            } else if (arr[pos] < target) {
-                low = pos + 1;
-            } else {
-                high = pos - 1;
+            // Ищем в левой части если target меньше
+            if (array[estimatedPos] > target) {
+                return searchInterpolation(array, start, estimatedPos - 1, target);
             }
         }
+        
+        // Элемент не обнаружен
         return -1;
     }
     
-    public static void main(String[] args) {
-        int[] arr = {10, 12, 13, 16, 18, 19, 20, 21, 22, 23};
-        int target = 18;
-        int result = interpolationSearch(arr, target);
-        if (result != -1) {
-            System.out.println("Элемент найден на позиции: " + result);
-        } else {
-            System.out.println("Элемент не найден");
+    // Поиск с интерполяцией (циклический вариант)
+    public static int searchInterpolationCyclic(int[] array, int target) {
+        int left = 0;
+        int right = array.length - 1;
+        
+        // Продолжаем пока границы valid и target в диапазоне
+        while (left <= right && target >= array[left] && target <= array[right]) {
+            // Рассчитываем ожидаемую позицию
+            int guessIndex = left + ((target - array[left]) * (right - left)) 
+                           / (array[right] - array[left]);
+            
+            // Проверяем угаданную позицию
+            if (array[guessIndex] == target) {
+                return guessIndex;
+            }
+            
+            // Сдвигаем левую границу если target справа
+            if (array[guessIndex] < target) {
+                left = guessIndex + 1;
+            } 
+            // Сдвигаем правую границу если target слева
+            else {
+                right = guessIndex - 1;
+            }
         }
+        
+        // Элемент не найден
+        return -1;
     }
 }
